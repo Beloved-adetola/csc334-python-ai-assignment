@@ -49,7 +49,8 @@ def analyze():
     try:
         # Analyze emotion using DeepFace
 # Force DeepFace to use PyTorch backend
-analysis = DeepFace.analyze(img_path=image_path, actions=['emotion'], enforce_detection=False, detector_backend='opencv')        dominant_emotion = analysis[0]['dominant_emotion']
+analysis = DeepFace.analyze(img_path=image_path, actions=['emotion'], enforce_detection=False, detector_backend='opencv')       
+        dominant_emotion = analysis[0]['dominant_emotion']
         emotion_scores = {k: float(v) for k, v in analysis[0]['emotion'].items()}
 
         # Save result to database
