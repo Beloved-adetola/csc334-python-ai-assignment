@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotion Detector</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Emotion Detection App 🎭</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+      <input type="file" id="fileInput" name="file" accept="image/*" required>
+      <button type="submit">Analyze Emotion</button>
+    </form>
+    <div id="result"></div>
+
+    <hr>
+    <button id="showRecords">View Saved Records 🗂️</button>
+    <div id="records"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const resultDiv = document.getElementById('result');
+    const recordsDiv = document.getElementById('records');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const file = document.getElementById('fileInput').files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+
+      resultDiv.innerHTML = 'Analyzing... ⏳';
+
+      const res = await fetch('/analyze', { method: 'POST', body: formData });
+      const data = await res.json();
+
+      if (data.error) {
+        resultDiv.innerHTML = `<p style="color:red;">Error: ${data.error}</p>`;
+      } else {
+        resultDiv.innerHTML = `
+          <h2>Dominant Emotion: ${data.dominant_emotion.toUpperCase()}</h2>
+          <pre>${JSON.stringify(data.scores, null, 2)}</pre>
+        `;
+      }
+    });
+
+    document.getElementById('showRecords').addEventListener('click', async () => {
+      const res = await fetch('/records');
+      const data = await res.json();
+      recordsDiv.innerHTML = `
+        <h3>Saved Records</h3>
+        <ul>${data.map(r => `<li><strong>${r.filename}</strong>: ${r.dominant_emotion}</li>`).join('')}</ul>
+      `;
+    });
+  </script>
+</body>
+</html>
