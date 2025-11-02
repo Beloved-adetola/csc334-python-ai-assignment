@@ -1,8 +1,9 @@
 Flask==3.0.3
 deepface==0.0.93
-opencv-python==4.10.0.84
-torch
-torchvision
+opencv-python-headless==4.10.0.84
 numpy==1.26.4
-werkzeug==3.0.4
-gunicorn
+torch==2.2.2
+torchvision==0.17.2
+pandas==2.2.2
+gunicorn==22.0.0
+flask-cors==4.0.1
